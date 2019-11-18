@@ -33,8 +33,6 @@ class Dashboard {
         $('#dashboard').remove();
         var row = $(".row").children();
         $(row[0]).removeClass('col-sm-12').addClass('col-sm-8 transition-width').after('<div class="col-sm-4 transition-width" id="dashboard"></div>');
-        //var viewer = this._viewer;
-        //setTimeout(function () { viewer.resize() }, 500);
     }
 
     loadPanels() {
