@@ -18,9 +18,10 @@ class Dashboard {
         var _this = this;
         this._viewer = viewer;
         this._panels = panels;
-        this.adjustLayout();
+
         this._viewer.addEventListener(Autodesk.Viewing.GEOMETRY_LOADED_EVENT, (viewer) => {
-            _this._viewer.resize();
+            this.adjustLayout();
+            setTimeout(function () { _this._viewer.resize() }, 500); _this._viewer.resize();
             _this.loadPanels();
         });
     }
@@ -32,9 +33,11 @@ class Dashboard {
         $('#dashboard').remove();
         var row = $(".row").children();
         $(row[0]).removeClass('col-sm-12').addClass('col-sm-8 transition-width').after('<div class="col-sm-4 transition-width" id="dashboard"></div>');
+        //var viewer = this._viewer;
+        //setTimeout(function () { viewer.resize() }, 500);
     }
 
-    loadPanels () {
+    loadPanels() {
         var _this = this;
         var data = new ModelData(this);
         data.init(function () {
