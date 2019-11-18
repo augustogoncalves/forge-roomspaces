@@ -5,8 +5,8 @@ $(document).ready(function () {
             if (NOP_VIEWER === null || NOP_VIEWER === undefined) return;
             new Dashboard(NOP_VIEWER, [
                 //new BarChart('Material'),
-                new PieChart('Room_Name')
-                //new PieChart('Spaces')
+                //new PieChart('Room_Name'),
+                new PieChart('Space_Type')
             ])
         }
     });
