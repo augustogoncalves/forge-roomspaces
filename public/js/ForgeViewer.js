@@ -33,25 +33,28 @@ function launchViewer(urn) {
 }
 
 function onDocumentLoadSuccess(doc) {
-  findMasterView(doc.getRoot().findAllViewables()[0], (viewables) => {
-    viewer.loadDocumentNode(doc, viewables).then(i => {
-      // documented loaded, any action?
-    });
+  var masterViews = findMasterViews(doc.getRoot().findAllViewables()[0]);
+  viewer.loadDocumentNode(doc, /* if any master view */ masterViews.length !== 0 ? /* use first */ masterViews[0] : /* or use default */ doc.getRoot().getDefaultGeometry()).then(i => {
+    // documented loaded, any action?
   });
+
 }
 
 // Yet to confirm if is safe to assume that Master View will be named
 // according to the phase it represents.
-function findMasterView(viewable, callback) {
-  if (viewable.isLeaf && (viewable.data.name === viewable.data.phaseNames)) {
-    console.log('Name: ' + viewable.data.name);
-    console.log('Phase: ' + viewable.data.phaseNames);
-    if (callback) callback(viewable);
+function findMasterViews(viewable) {
+  var masterViews = [];
+  // master views are under the "folder" with this UUID
+  if (viewable.data.type === 'folder' && viewable.data.name === '08f99ae5-b8be-4f8d-881b-128675723c10') {
+    return viewable.children;
   }
   if (viewable.children === undefined) return;
-  viewable.children.forEach((c) => {
-    findMasterView(c, callback)
+  viewable.children.forEach((children) => {
+    var mv = findMasterViews(children);
+    if (mv === undefined || mv.length == 0) return;
+    masterViews = masterViews.concat(mv);
   })
+  return masterViews;
 }
 
 function onDocumentLoadFailure(viewerErrorCode) {
