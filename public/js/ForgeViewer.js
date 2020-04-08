@@ -33,10 +33,25 @@ function launchViewer(urn) {
 }
 
 function onDocumentLoadSuccess(doc) {
-  var viewables = doc.getRoot().findByGuid('c884ae1b-61e7-4f9d-0001-719e20b22d0b-000f4c78');
-  viewer.loadDocumentNode(doc, viewables).then(i => {
-    // documented loaded, any action?
+  findMasterView(doc.getRoot().findAllViewables()[0], (viewables) => {
+    viewer.loadDocumentNode(doc, viewables).then(i => {
+      // documented loaded, any action?
+    });
   });
+}
+
+// Yet to confirm if is safe to assume that Master View will be named
+// according to the phase it represents.
+function findMasterView(viewable, callback) {
+  if (viewable.isLeaf && (viewable.data.name === viewable.data.phaseNames)) {
+    console.log('Name: ' + viewable.data.name);
+    console.log('Phase: ' + viewable.data.phaseNames);
+    if (callback) callback(viewable);
+  }
+  if (viewable.children === undefined) return;
+  viewable.children.forEach((c) => {
+    findMasterView(c, callback)
+  })
 }
 
 function onDocumentLoadFailure(viewerErrorCode) {
